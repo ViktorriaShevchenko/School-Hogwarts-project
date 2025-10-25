@@ -11,5 +11,4 @@ public class HogwartsSchoolOfWitchcraftAndWizardryApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HogwartsSchoolOfWitchcraftAndWizardryApplication.class, args);
 	}
-
 }
