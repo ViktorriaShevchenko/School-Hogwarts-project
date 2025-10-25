@@ -1,45 +1,44 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.*;
 
 @Service
 public class FacultyService {
 
-    private final HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long count = 0;
+    private final FacultyRepository facultyRepository;
+
+    @Autowired
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty addFaculty(Faculty faculty) {
-        faculty.setId(count++);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
-    public Faculty findFaculty(long id) {
-        return faculties.get(id);
+    public Optional<Faculty> findFaculty(long id) {
+        return facultyRepository.findById(id);
     }
 
-    public Faculty editFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            return null;
+    public Optional<Faculty> editFaculty(Faculty faculty) {
+        if (facultyRepository.existsById(faculty.getId())) {
+            return Optional.of(facultyRepository.save(faculty));
         }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return Optional.empty();
     }
 
-    public Faculty deleteFaculty(long id) {
-        return faculties.remove(id);
+    public Optional<Faculty> deleteFaculty(long id) {
+        Optional<Faculty> faculty = facultyRepository.findById(id);
+        faculty.ifPresent(f -> facultyRepository.deleteById(id));
+        return faculty;
     }
 
     public Collection<Faculty> findByColor(String color) {
-        ArrayList<Faculty> result = new ArrayList<>();
-        for (Faculty faculty : faculties.values()) {
-            if (Objects.equals(faculty.getColor(), color)) {
-                result.add(faculty);
-            }
-        }
-        return result;
+        return facultyRepository.findByColor(color);
     }
 }
