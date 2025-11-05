@@ -25,7 +25,7 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public Optional<Faculty> findFaculty(long id) {
+    public Optional<Faculty> findFaculty(Long id) {
         return facultyRepository.findById(id);
     }
 
@@ -36,7 +36,7 @@ public class FacultyService {
         return Optional.empty();
     }
 
-    public Optional<Faculty> deleteFaculty(long id) {
+    public Optional<Faculty> deleteFaculty(Long id) {
         Optional<Faculty> faculty = facultyRepository.findById(id);
         faculty.ifPresent(f -> facultyRepository.deleteById(id));
         return faculty;
@@ -52,5 +52,9 @@ public class FacultyService {
 
     public Collection<Student> getFacultyStudents(Long facultyId) {
         return studentRepository.findByFacultyId(facultyId);
+    }
+
+    public Collection<Faculty> getAllFaculties() {
+        return facultyRepository.findAll();
     }
 }

@@ -22,7 +22,7 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Optional<Student> findStudent(long id) {
+    public Optional<Student> findStudent(Long id) {
         return studentRepository.findById(id);
     }
 
@@ -33,7 +33,7 @@ public class StudentService {
         return Optional.empty();
     }
 
-    public Optional<Student> deleteStudent(long id) {
+    public Optional<Student> deleteStudent(Long id) {
         Optional<Student> student = studentRepository.findById(id);
         student.ifPresent(s -> studentRepository.deleteById(id));
         return student;
@@ -50,5 +50,9 @@ public class StudentService {
     public Optional<Faculty> getStudentFaculty(Long studentId) {
         return findStudent(studentId)
                 .map(Student::getFaculty);
+    }
+
+    public Collection<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 }
