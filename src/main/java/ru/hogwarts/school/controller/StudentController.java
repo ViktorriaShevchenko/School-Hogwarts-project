@@ -1,16 +1,18 @@
 package ru.hogwarts.school.controller;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
+
+    private static final String STUDENT_HAS_NO_FACULTY = "Student has no faculty";
 
     private final StudentService studentService;
 
@@ -19,51 +21,48 @@ public class StudentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
-        return studentService.findStudent(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Student getStudent(@PathVariable Long id) {
+        return studentService.findStudent(id);
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentService.addStudent(student);
+    public Long createStudent(@RequestBody Student student) {
+        Student savedStudent = studentService.addStudent(student);
+        return savedStudent.getId();
     }
 
     @PutMapping
-    public ResponseEntity<Student> editStudent(@RequestBody Student student) {
-        return studentService.editStudent(student)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Student editStudent(@RequestBody Student student) {
+        return studentService.editStudent(student);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
-        return studentService.deleteStudent(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) Integer age) {
+    public List<Student> findStudents(@RequestParam(required = false) Integer age) {
         if (age != null && age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
+            return studentService.findByAge(age);
         }
-        return ResponseEntity.ok(studentService.getAllStudents());
+        return studentService.getAllStudents();
     }
 
-    @GetMapping ("/age-between")
-    public ResponseEntity<Collection<Student>> getStudentsByAgeRange(
+    @GetMapping("/age-between")
+    public List<Student> getStudentsByAgeRange(
             @RequestParam int minAge,
             @RequestParam int maxAge) {
-        Collection<Student> students = studentService.findByAgeBetween(minAge, maxAge);
-        return ResponseEntity.ok(students);
+        return studentService.findByAgeBetween(minAge, maxAge);
     }
 
     @GetMapping("{id}/faculty")
-    public ResponseEntity<Faculty> getStudentFaculty(@PathVariable Long id) {
-        return studentService.getStudentFaculty(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Faculty getStudentFaculty(@PathVariable Long id) {
+        Faculty faculty = studentService.getStudentFaculty(id);
+        if (faculty == null) {
+            throw new RuntimeException(STUDENT_HAS_NO_FACULTY);
+        }
+        return faculty;
     }
 }

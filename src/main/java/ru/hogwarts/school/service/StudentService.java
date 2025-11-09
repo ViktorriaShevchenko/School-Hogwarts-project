@@ -11,6 +11,8 @@ import java.util.*;
 @Service
 public class StudentService {
 
+    private static final String STUDENT_NOT_FOUND = "Student not found";
+
     private final StudentRepository studentRepository;
 
     @Autowired
@@ -22,37 +24,54 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Optional<Student> findStudent(Long id) {
-        return studentRepository.findById(id);
+    public Student findStudent(Long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(STUDENT_NOT_FOUND));
     }
 
-    public Optional<Student> editStudent(Student student) {
-        if (studentRepository.existsById(student.getId())) {
-            return Optional.of(studentRepository.save(student));
+    public Student editStudent(Student student) {
+        Long studentId = student.getId();
+        if (!studentRepository.existsById(studentId)) {
+            throw new RuntimeException(STUDENT_NOT_FOUND);
         }
-        return Optional.empty();
+        return studentRepository.save(student);
     }
 
-    public Optional<Student> deleteStudent(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        student.ifPresent(s -> studentRepository.deleteById(id));
-        return student;
+    public void deleteStudent(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new RuntimeException(STUDENT_NOT_FOUND);
+        }
+        studentRepository.deleteById(id);
     }
 
-    public Collection<Student> findByAge(int age) {
-        return studentRepository.findByAge(age);
+    public List<Student> findByAge(int age) {
+        if (age > 0) {
+            List<Student> students = studentRepository.findByAge(age);
+            return students != null ? students : Collections.emptyList();
+        }
+        return Collections.emptyList();
     }
 
-    public Collection<Student> findByAgeBetween(int minAge, int maxAge) {
-        return studentRepository.findByAgeBetween(minAge, maxAge);
+    public List<Student> findByAgeBetween(int minAge, int maxAge) {
+        if (minAge > 0 && maxAge > minAge) {
+            List<Student> students = studentRepository.findByAgeBetween(minAge, maxAge);
+            return students != null ? students : Collections.emptyList();
+        }
+        return Collections.emptyList();
     }
 
-    public Optional<Faculty> getStudentFaculty(Long studentId) {
-        return findStudent(studentId)
-                .map(Student::getFaculty);
+    public Faculty getStudentFaculty(Long studentId) {
+        Student student = findStudent(studentId);
+        Faculty faculty = student.getFaculty();
+        if (faculty == null) {
+            throw new RuntimeException("Student has no faculty");
+        }
+
+        return faculty;
     }
 
-    public Collection<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<Student> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        return students != null ? students : Collections.emptyList();
     }
 }

@@ -12,8 +12,10 @@ import java.util.*;
 @Service
 public class FacultyService {
 
+    private static final String FACULTY_NOT_FOUND = "Faculty not found";
+
     private final FacultyRepository facultyRepository;
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
     public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
@@ -25,36 +27,41 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public Optional<Faculty> findFaculty(Long id) {
-        return facultyRepository.findById(id);
+    public Faculty findFaculty(Long id) {
+        return facultyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(FACULTY_NOT_FOUND));
     }
 
-    public Optional<Faculty> editFaculty(Faculty faculty) {
+    public Faculty editFaculty(Faculty faculty) {
         if (facultyRepository.existsById(faculty.getId())) {
-            return Optional.of(facultyRepository.save(faculty));
+            return facultyRepository.save(faculty);
         }
-        return Optional.empty();
+        throw new RuntimeException(FACULTY_NOT_FOUND);
     }
 
-    public Optional<Faculty> deleteFaculty(Long id) {
-        Optional<Faculty> faculty = facultyRepository.findById(id);
-        faculty.ifPresent(f -> facultyRepository.deleteById(id));
-        return faculty;
+    public void deleteFaculty(Long id) {
+        Faculty faculty = facultyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(FACULTY_NOT_FOUND));
+        facultyRepository.deleteById(id);
     }
 
-    public Collection<Faculty> findByColor(String color) {
-        return facultyRepository.findByColor(color);
+    public List<Faculty> findByColor(String color) {
+        List<Faculty> faculties = facultyRepository.findByColor(color);
+        return faculties != null ? faculties : Collections.emptyList();
     }
 
-    public Collection<Faculty> findByNameOrColor(String name, String color) {
-        return facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(name, color);
+    public List<Faculty> findByNameOrColor(String name, String color) {
+        List<Faculty> faculties = facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(name, color);
+        return faculties != null ? faculties : Collections.emptyList();
     }
 
-    public Collection<Student> getFacultyStudents(Long facultyId) {
-        return studentRepository.findByFacultyId(facultyId);
+    public List<Student> getFacultyStudents(Long facultyId) {
+        List<Student> students = studentRepository.findByFacultyId(facultyId);
+        return students != null ? students : Collections.emptyList();
     }
 
-    public Collection<Faculty> getAllFaculties() {
-        return facultyRepository.findAll();
+    public List<Faculty> getAllFaculties() {
+        List<Faculty> faculties = facultyRepository.findAll();
+        return faculties != null ? faculties : Collections.emptyList();
     }
 }

@@ -19,6 +19,10 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Transactional
 public class AvatarService {
 
+    private static final String STUDENT_NOT_FOUND = "Student not found";
+    private static final String AVATAR_NOT_FOUND = "Avatar not found";
+
+
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
@@ -30,9 +34,9 @@ public class AvatarService {
         this.studentRepository = studentRepository;
     }
 
-    public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+    public Long uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new RuntimeException(STUDENT_NOT_FOUND));
 
         String extension = getExtension(file.getOriginalFilename());
         Path filePath = Path.of(avatarsDir, "student-" + studentId + "." + extension);
@@ -54,11 +58,12 @@ public class AvatarService {
         avatar.setData(file.getBytes());
 
         Avatar savedAvatar = avatarRepository.save(avatar);
+        return savedAvatar.getId();
     }
 
     public Avatar findAvatar(Long studentId) {
         return avatarRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new RuntimeException("Avatar not found"));
+                .orElseThrow(() -> new RuntimeException(AVATAR_NOT_FOUND));
     }
 
     private String getExtension(String fileName) {
@@ -69,7 +74,9 @@ public class AvatarService {
         return avatarRepository.findByStudentId(studentId)
                 .orElseGet(() -> {
                     Avatar newAvatar = new Avatar();
-                    newAvatar.setStudent(studentRepository.findById(studentId).orElseThrow());
+                    Student student = studentRepository.findById(studentId)
+                            .orElseThrow(() -> new RuntimeException("Student not found"));
+                    newAvatar.setStudent(student);
                     return newAvatar;
                 });
     }
