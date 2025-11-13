@@ -52,7 +52,7 @@ public class AvatarController {
              OutputStream os = response.getOutputStream()) {
             response.setStatus(200);
             response.setContentType(avatar.getMediaType());
-            response.setContentLength(avatar.getFileSize().intValue());
+            response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
     }

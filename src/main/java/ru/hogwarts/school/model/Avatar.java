@@ -12,7 +12,7 @@ public class Avatar {
     @GeneratedValue
     private Long id;
     private String filePath;
-    private Long fileSize;
+    private long fileSize;
     private String mediaType;
 
     @Lob
@@ -50,11 +50,11 @@ public class Avatar {
         this.filePath = filePath;
     }
 
-    public Long getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Long fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 

@@ -46,22 +46,18 @@ public class FacultyService {
     }
 
     public List<Faculty> findByColor(String color) {
-        List<Faculty> faculties = facultyRepository.findByColor(color);
-        return faculties != null ? faculties : Collections.emptyList();
+        return facultyRepository.findByColor(color);
     }
 
     public List<Faculty> findByNameOrColor(String name, String color) {
-        List<Faculty> faculties = facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(name, color);
-        return faculties != null ? faculties : Collections.emptyList();
+        return facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(name, color);
     }
 
     public List<Student> getFacultyStudents(Long facultyId) {
-        List<Student> students = studentRepository.findByFacultyId(facultyId);
-        return students != null ? students : Collections.emptyList();
+        return studentRepository.findByFacultyId(facultyId);
     }
 
     public List<Faculty> getAllFaculties() {
-        List<Faculty> faculties = facultyRepository.findAll();
-        return faculties != null ? faculties : Collections.emptyList();
+        return facultyRepository.findAll();
     }
 }

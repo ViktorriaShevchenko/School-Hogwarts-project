@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.exception.StudentHasNoFacultyException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -46,16 +47,14 @@ public class StudentService {
 
     public List<Student> findByAge(int age) {
         if (age > 0) {
-            List<Student> students = studentRepository.findByAge(age);
-            return students != null ? students : Collections.emptyList();
+            return studentRepository.findByAge(age);
         }
         return Collections.emptyList();
     }
 
     public List<Student> findByAgeBetween(int minAge, int maxAge) {
         if (minAge > 0 && maxAge > minAge) {
-            List<Student> students = studentRepository.findByAgeBetween(minAge, maxAge);
-            return students != null ? students : Collections.emptyList();
+            return studentRepository.findByAgeBetween(minAge, maxAge);
         }
         return Collections.emptyList();
     }
@@ -64,14 +63,12 @@ public class StudentService {
         Student student = findStudent(studentId);
         Faculty faculty = student.getFaculty();
         if (faculty == null) {
-            throw new RuntimeException("Student has no faculty");
+            throw new StudentHasNoFacultyException("Student has no faculty");
         }
-
         return faculty;
     }
 
     public List<Student> getAllStudents() {
-        List<Student> students = studentRepository.findAll();
-        return students != null ? students : Collections.emptyList();
+        return studentRepository.findAll();
     }
 }
