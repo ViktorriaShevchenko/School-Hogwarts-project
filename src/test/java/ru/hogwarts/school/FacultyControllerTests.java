@@ -32,7 +32,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testGetFaculty() {
+    void getFacultyTest() {
         ResponseEntity<Faculty> response = restTemplate.getForEntity(
                 BASE_URL + port + "/faculty/1",
                 Faculty.class
@@ -41,7 +41,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testGetFacultyNotFound() {
+    void getFacultyNotFoundTest() {
         ResponseEntity<Faculty> response = restTemplate.getForEntity(
                 BASE_URL + port + "/faculty/999",
                 Faculty.class
@@ -50,7 +50,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testCreateFaculty() {
+    void createFacultyTest() {
         Faculty faculty = new Faculty();
         faculty.setName("Тест Факультет");
         faculty.setColor("синий");
@@ -64,7 +64,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testEditFaculty() {
+    void editFacultyTest() {
         Faculty faculty = new Faculty();
         faculty.setId(1L);
         faculty.setName("Обновленный Факультет");
@@ -75,13 +75,13 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testDeleteFaculty() {
+    void deleteFacultyTest() {
         restTemplate.delete(BASE_URL + port + "/faculty/1");
         assertNotNull(restTemplate);
     }
 
     @Test
-    void testGetAllFaculties() {
+    void getAllFacultiesTest() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 BASE_URL + port + "/faculty",
                 String.class
@@ -90,7 +90,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testFindFacultiesByColor() {
+    void findFacultiesByColorTest() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 BASE_URL + port + "/faculty?color=синий",
                 String.class
@@ -99,7 +99,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testSearchFaculties() {
+    void searchFacultiesTest() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 BASE_URL + port + "/faculty/search?search=тест",
                 String.class
@@ -108,7 +108,7 @@ public class FacultyControllerTests {
     }
 
     @Test
-    void testGetFacultyStudents() {
+    void getFacultyStudentsTest() {
         ResponseEntity<String> response = restTemplate.getForEntity(
                 BASE_URL + port + "/faculty/1/students",
                 String.class

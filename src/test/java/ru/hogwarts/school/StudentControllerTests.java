@@ -32,7 +32,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testGetStudent() {
+    void getStudentTest() {
         ResponseEntity<Student> response = restTemplate.getForEntity(
                 BASE_URL + port + "/student/1",
                 Student.class
@@ -41,7 +41,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testGetStudentNotFound() {
+    void getStudentNotFoundTest() {
         ResponseEntity<Student> response = restTemplate.getForEntity(
                 BASE_URL + port + "/student/999",
                 Student.class
@@ -50,7 +50,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testCreateStudent() {
+    void createStudentTest() {
         Student student = new Student();
         student.setName("Тест Студент");
         student.setAge(20);
@@ -64,7 +64,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testEditStudent() {
+    void editStudentTest() {
         Student student = new Student();
         student.setId(1L);
         student.setName("Обновленный Студент");
@@ -80,13 +80,13 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testDeleteStudent() {
+    void deleteStudentTest() {
         restTemplate.delete(BASE_URL + port + "/student/1");
         assertNotNull(restTemplate);
     }
 
     @Test
-    void testGetAllStudents() {
+    void getAllStudentsTest() {
         ResponseEntity<Student[]> response = restTemplate.getForEntity(
                 BASE_URL + port + "/student",
                 Student[].class
@@ -95,7 +95,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testFindStudentsByAge() {
+    void findStudentsByAgeTest() {
         ResponseEntity<Student[]> response = restTemplate.getForEntity(
                 BASE_URL + port + "/student?age=20",
                 Student[].class
@@ -104,7 +104,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testGetStudentsByAgeRange() {
+    void getStudentsByAgeRangeTest() {
         ResponseEntity<Student[]> response = restTemplate.getForEntity(
                 BASE_URL + port + "/student/age-between?minAge=18&maxAge=25",
                 Student[].class
@@ -113,7 +113,7 @@ public class StudentControllerTests {
     }
 
     @Test
-    void testGetStudentFaculty() {
+    void getStudentFacultyTest() {
         ResponseEntity<Object> response = restTemplate.getForEntity(
                 BASE_URL + port + "/student/1/faculty",
                 Object.class
