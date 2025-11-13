@@ -59,10 +59,6 @@ public class StudentController {
 
     @GetMapping("{id}/faculty")
     public Faculty getStudentFaculty(@PathVariable Long id) {
-        Faculty faculty = studentService.getStudentFaculty(id);
-        if (faculty == null) {
-            throw new RuntimeException(STUDENT_HAS_NO_FACULTY);
-        }
-        return faculty;
+        return studentService.getStudentFaculty(id);
     }
 }
