@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FacultyControllerTests {
+public class FacultyControllerMvcTests {
 
     private static final String BASE_URL = "http://localhost:";
 
