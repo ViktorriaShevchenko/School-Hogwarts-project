@@ -61,4 +61,19 @@ public class StudentController {
     public Faculty getStudentFaculty(@PathVariable Long id) {
         return studentService.getStudentFaculty(id);
     }
+
+    @GetMapping("/count")
+    public long countStudents() {
+        return studentService.countAllStudents();
+    }
+
+    @GetMapping("/avarage-age")
+    public double getAverageAge() {
+        return studentService.findAverageAge();
+    }
+
+    @GetMapping("/last-five")
+    public List<Student> getLastFiveStudents() {
+        return studentService.findLastFiveStudents();
+    }
 }
