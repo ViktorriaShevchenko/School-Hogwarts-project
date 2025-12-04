@@ -126,4 +126,19 @@ public class StudentControllerTestRestTemplateTest {
         );
         assertNotNull(response);
     }
+
+    @Test
+    void studentsNamesStartingWithATest() {
+        ResponseEntity<String[]> response = restTemplate.getForEntity(
+                BASE_URL + port + "/student/names-starting-with-a",
+                String[].class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        for (String name : response.getBody()) {
+            assertEquals(name.toUpperCase(), name);
+        }
+    }
 }
