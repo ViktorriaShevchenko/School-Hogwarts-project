@@ -59,4 +59,9 @@ public class FacultyController {
         List<Student> students = facultyService.getFacultyStudents(id);
         return students != null ? students : Collections.emptyList();
     }
+
+    @GetMapping("/longest-name")
+    public String getLongestFacultyName() {
+        return facultyService.getLongestFacultyName();
+    }
 }
