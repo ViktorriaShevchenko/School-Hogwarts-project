@@ -85,4 +85,68 @@ public class StudentController {
     public Double getAverageAgeAllStudents() {
         return studentService.getAverageAgeAllStudent();
     }
+
+    @GetMapping("/print-parallel")
+    public void printStudentParallel() {
+        List<Student> students = studentService.getFirstSixStudents();
+
+        if (students.size() < 6) {
+            return;
+        }
+
+        System.out.println(Thread.currentThread().getName() + ": " + students.get(0).getName());
+        System.out.println(Thread.currentThread().getName() + ": " + students.get(1).getName());
+
+        Thread thread1 = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + ": " + students.get(2).getName());
+            System.out.println(Thread.currentThread().getName() + ": " + students.get(3).getName());
+        });
+
+        Thread thread2 = new Thread(() -> {
+            System.out.println(Thread.currentThread().getName() + ": " + students.get(4).getName());
+            System.out.println(Thread.currentThread().getName() + ": " + students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @GetMapping("/print-synchronized")
+    public void printStudentsSynchronized() {
+        List<Student> students = studentService.getFirstSixStudents();
+
+        if (students.size() < 6) {
+            return;
+        }
+
+        studentService.printStudentNameSync(students.get(0));
+        studentService.printStudentNameSync(students.get(1));
+
+        Thread thread1 = new Thread(() -> {
+            studentService.printStudentNameSync(students.get(2));
+            studentService.printStudentNameSync(students.get(3));
+        });
+
+        Thread thread2 = new Thread(() -> {
+            studentService.printStudentNameSync(students.get(4));
+            studentService.printStudentNameSync(students.get(5));
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

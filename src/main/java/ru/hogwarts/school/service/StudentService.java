@@ -26,6 +26,21 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    public List<Student> getFirstSixStudents() {
+        logger.info("Was invoked method for first six students");
+
+        List<Student> allStudents = studentRepository.findAll();
+
+        return allStudents.stream()
+                .limit(6)
+                .collect(Collectors.toList());
+    }
+
+    public synchronized void printStudentNameSync(Student student) {
+        logger.debug("Synchronized print from thread: {}", Thread.currentThread().getName());
+        System.out.println(Thread.currentThread().getName() + ": " + student.getName());
+    }
+
     public Student addStudent(Student student) {
         logger.info("Was invoked method for create student");
         logger.debug("Creating student with name: {}", student.getName());
