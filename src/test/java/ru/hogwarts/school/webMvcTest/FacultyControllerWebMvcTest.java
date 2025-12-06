@@ -129,4 +129,22 @@ public class FacultyControllerWebMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
+
+    @Test
+    void getLongestFacultyNameTest() throws Exception {
+        when(facultyService.getLongestFacultyName()).thenReturn("Гриффиндор");
+
+        mockMvc.perform(get("/faculty/longest-name"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Гриффиндор"));
+    }
+
+    @Test
+    void getLongestFacultyNameWhenEmptyTest() throws Exception {
+        when(facultyService.getLongestFacultyName()).thenReturn("");
+
+        mockMvc.perform(get("/faculty/longest-name"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
 }

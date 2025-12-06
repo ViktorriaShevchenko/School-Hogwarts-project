@@ -13,6 +13,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -130,5 +131,28 @@ public class StudentControllerWebMvcTest {
 
         mockMvc.perform(get("/student/1/faculty"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getStudentsNamesStartingWithATest() throws Exception {
+
+        List<String> names = Arrays.asList("АННА", "АЛЕКСЕЙ", "АЛЕКСАНДР");
+        when(studentService.getStudentNamesStartingWithA()).thenReturn(names);
+
+        mockMvc.perform(get("/student/names-starting-with-a"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]").value("АННА"))
+                .andExpect(jsonPath("$[1]").value("АЛЕКСЕЙ"))
+                .andExpect(jsonPath("$[2]").value("АЛЕКСАНДР"))
+                .andExpect(jsonPath("$.length()").value(3));
+    }
+
+    @Test
+    void getAverageAgeTest() throws Exception {
+        when(studentService.getAverageAgeAllStudent()).thenReturn(20.5);
+
+        mockMvc.perform(get("/student/average-age-stream"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("20.5"));
     }
 }
